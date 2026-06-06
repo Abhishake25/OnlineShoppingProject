@@ -14,7 +14,7 @@ public class UserDaoImpl implements UserDao{
 	@Override
 	public boolean validateUser(String username, String password) throws ShoppingException {
 		
-		String sql = "select * from user_table where username=? and password=?";
+		String sql = "select * from users where username=? and password=?";
 		
 		Connection con = DBUtil.getConnection();
 		try {
