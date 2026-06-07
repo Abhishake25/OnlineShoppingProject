@@ -1,5 +1,6 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.shopping.entity.Product" %>
+<%@ page import="com.shopping.entity.User" %>
 
 <%
 List<Product> products =
@@ -74,6 +75,12 @@ body{
 </head>
 <body>
 
+<h3>
+Welcome,
+<%= ((User)session.getAttribute("loggedUser")).getUsername() %>
+</h3>
+
+<a href="logout">Logout</a>
 <div class="header">
     <h1>Available Products</h1>
 </div>

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.List;
 
 import com.shopping.dao.CategoryDao;
+import com.shopping.dao.DaoFactory;
 import com.shopping.daoimpl.CategoryDaoImpl;
 import com.shopping.entity.Category;
 
@@ -15,6 +16,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/categories")
 public class CategoryServlet extends HttpServlet {
@@ -25,7 +27,7 @@ public class CategoryServlet extends HttpServlet {
 
     @Override
     public void init() {
-        categoryDao = new CategoryDaoImpl();
+        categoryDao = DaoFactory.getCategoryDao();
     }
 
     @Override
@@ -34,7 +36,14 @@ public class CategoryServlet extends HttpServlet {
             throws ServletException, IOException {
 
         try {
-
+                       //check the session exists or not
+        	HttpSession session = request.getSession(false);
+        	
+        	if(session==null || session.getAttribute("loggedUser")==null) {
+        		response.sendRedirect("login.html");
+        		return;
+        	}
+        	
             List<Category> categories =
                     categoryDao.getAllCategories();
 

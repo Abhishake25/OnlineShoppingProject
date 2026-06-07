@@ -1,5 +1,6 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.shopping.entity.Category" %>
+<%@ page import="com.shopping.entity.User" %>
 
 <%
 List<Category> categories =
@@ -86,7 +87,12 @@ body{
 
 </head>
 <body>
+<h3>
+Welcome,
+<%=  ((User)session.getAttribute("loggedUser")).getUsername()%>
+</h3>
 
+<a href="logout">Logout</a>
 <div class="header">
     <h1>Online Shopping System</h1>
     <p>Select a Category to Explore Products</p>

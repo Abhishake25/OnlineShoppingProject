@@ -3,6 +3,7 @@ package com.shopping.controller;
 import java.io.IOException;
 import java.util.List;
 
+import com.shopping.dao.DaoFactory;
 import com.shopping.dao.ProductDao;
 import com.shopping.daoimpl.ProductDaoImpl;
 import com.shopping.entity.Product;
@@ -13,6 +14,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/products")
 public class ProductServlet extends HttpServlet{
@@ -23,9 +25,16 @@ public class ProductServlet extends HttpServlet{
 	protected void doGet(HttpServletRequest request,HttpServletResponse response) throws ServletException,IOException{
 		
 		try {
+			
+            HttpSession session = request.getSession(false);
+        	
+        	if(session==null) {
+        		response.sendRedirect("login.html");
+        		return;
+        	}
 			int categoryId = Integer.parseInt(request.getParameter("categoryId"));
-			System.out.println(categoryId);
-			ProductDao productDao = new ProductDaoImpl();
+			
+			ProductDao productDao = DaoFactory.getProductDao();
 			
 			List<Product> products =  productDao.getProductsBCategroy(categoryId);
 			

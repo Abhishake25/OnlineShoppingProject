@@ -4,8 +4,9 @@ package com.shopping.controller;
 
 import java.io.IOException;
 
+import com.shopping.dao.DaoFactory;
 import com.shopping.dao.UserDao;
-import com.shopping.daoimpl.UserDaoImpl;
+import com.shopping.entity.User;
 import com.shopping.exception.ShoppingException;
 
 import jakarta.servlet.ServletException;
@@ -13,6 +14,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
@@ -24,7 +27,7 @@ public class LoginServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
 
-        userDao = new UserDaoImpl();
+        userDao = DaoFactory.getUserDao();
     }
 
     @Override
@@ -39,16 +42,23 @@ public class LoginServlet extends HttpServlet {
         String password =
                 request.getParameter("password");
 
+    	System.out.println("username:"+username);
+		System.out.println("password"+password);
         try {
 
-            boolean status =
+            User user =
                     userDao.validateUser(
                             username,
                             password);
 
-            if (status) {
+            System.out.println("user object"+user);
+            if (user!=null) {
 
+            	HttpSession  session = request.getSession();
+            	session.setAttribute("loggedUser", user);
+            	
                 response.sendRedirect("categories");
+               
 
             } else {
 
@@ -56,7 +66,7 @@ public class LoginServlet extends HttpServlet {
                         "error",
                         "Invalid Username or Password");
 
-                request.getRequestDispatcher("login.jsp")
+                request.getRequestDispatcher("login.html")
                        .forward(request, response);
             }
 
